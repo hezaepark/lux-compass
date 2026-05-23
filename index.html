@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0c0c0c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Field Calc">
+  <title>Field Calc — 빛 계산기</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-eyebrow">Photography · Exposure</div>
+      <div class="header-title">Field <span>Calc</span></div>
+    </div>
+    <button class="gear-btn" id="gear-btn">
+      <div class="dot"></div>
+      장비 설정
+    </button>
+  </div>
+
+  <!-- 1. SCENE BRIGHTNESS -->
+  <div class="section">
+    <div class="section-label">장면 밝기</div>
+    <div class="scene-grid" id="scene-grid"></div>
+    <div id="custom-ev-row" style="display:none; margin-top:14px;">
+      <div class="slider-wrap">
+        <div class="slider-header">
+          <span class="slider-label">EV 직접 입력</span>
+          <span class="slider-val" id="custom-ev-val">EV 13</span>
+        </div>
+        <input type="range" id="custom-ev-slider" min="0" max="20" step="0.5" value="13">
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SUBJECT -->
+  <div class="section">
+    <div class="section-label">피사체</div>
+    <div class="pill-group" id="subject-pills"></div>
+    <div id="speed-row" style="margin-top:14px;">
+      <div class="slider-wrap">
+        <div class="slider-header">
+          <span class="slider-label">이동 속도</span>
+          <span class="slider-val" id="speed-val">5 km/h</span>
+        </div>
+        <input type="range" id="speed-slider" min="1" max="150" step="1" value="5">
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. GOAL -->
+  <div class="section">
+    <div class="section-label">촬영 목표</div>
+    <div class="goal-list" id="goal-list"></div>
+  </div>
+
+  <!-- 4. LENS / DISTANCE -->
+  <div class="section">
+    <div class="section-label">렌즈 · 거리</div>
+    <div class="slider-wrap">
+      <div class="slider-header">
+        <span class="slider-label">초점거리</span>
+        <span class="slider-val" id="focal-val">50mm</span>
+      </div>
+      <input type="range" id="focal-slider" min="8" max="600" step="1" value="50">
+    </div>
+    <div class="slider-wrap" id="distance-row">
+      <div class="slider-header">
+        <span class="slider-label">피사체까지 거리</span>
+        <span class="slider-val" id="distance-val">5m</span>
+      </div>
+      <input type="range" id="distance-slider" min="0.5" max="100" step="0.5" value="5">
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-header">
+        <span class="slider-label">조리개</span>
+        <span class="slider-val" id="aperture-val">f/8.0</span>
+      </div>
+      <input type="range" id="aperture-slider" min="1.0" max="22" step="0.1" value="8">
+    </div>
+  </div>
+
+  <!-- 5. FILTERS -->
+  <div class="section">
+    <div class="section-label">ND 필터</div>
+    <div class="filter-row" id="nd-buttons"></div>
+    <div class="toggle-row" style="margin-top:12px;">
+      <button class="toggle" id="cpl-toggle"><div class="toggle-thumb"></div></button>
+      <span class="toggle-label" id="cpl-label">CPL 편광 필터 (-1.5 stop)</span>
+    </div>
+  </div>
+
+  <!-- 6. RESULTS -->
+  <div class="result-section">
+    <div class="section-label" style="color:var(--gold);">계산 결과</div>
+
+    <div class="result-grid">
+      <div class="result-card main">
+        <div class="result-card-label">셔터스피드</div>
+        <div class="result-card-val" id="res-shutter">—</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card-label">ISO</div>
+        <div class="result-card-val" id="res-iso">—</div>
+      </div>
+      <div class="result-card">
+        <div class="result-card-label">조리개</div>
+        <div class="result-card-val" id="res-aperture">—</div>
+      </div>
+    </div>
+
+    <div class="result-sub-grid">
+      <div class="result-sub">
+        <div class="result-sub-label">필터 없을 때</div>
+        <div class="result-sub-val" id="res-base-shutter">—</div>
+      </div>
+      <div class="result-sub">
+        <div class="result-sub-label">필터 감소</div>
+        <div class="result-sub-val" id="res-filter-stops">—</div>
+      </div>
+      <div class="result-sub">
+        <div class="result-sub-label">노출 보정</div>
+        <div class="result-sub-val" id="res-exp-comp">—</div>
+      </div>
+    </div>
+
+    <div class="warning" id="res-warning" style="display:none;"></div>
+
+    <div class="result-note">
+      · SL3 36×24mm / 9456px 기준 계산<br>
+      · 조리개 고정 → 셔터·ISO 최적화<br>
+      · 실제 환경에 따라 ±1 stop 조정 권장
+    </div>
+  </div>
+
+  <!-- 7. FEEDBACK -->
+  <div class="feedback-toggle-row" id="feedback-toggle-row">
+    <div class="feedback-toggle-left">
+      📸 결과물 피드백
+      <span>찍은 사진을 바탕으로 설정 수정값 제안받기</span>
+    </div>
+    <span id="feedback-arrow" style="color:var(--text-muted);font-size:11px;">▼</span>
+  </div>
+
+  <div class="feedback-body" id="feedback-body">
+    <textarea class="feedback-textarea" id="feedback-text"
+      placeholder="예: 뒷배경이 너무 밝게 날아갔어요&#10;예: 사람이 약간 흔들렸어요&#10;예: 전체적으로 너무 어둡게 나왔어요"></textarea>
+    <button class="feedback-send" id="feedback-send-btn">수정값 요청 →</button>
+    <div class="feedback-result" id="feedback-result"></div>
+  </div>
+
+  <!-- 8. BOTTOM ACTIONS -->
+  <div class="bottom-actions">
+    <button class="reset-btn" id="reset-btn">↺ 초기화</button>
+  </div>
+
+</div><!-- /.app -->
+
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">장비 프로파일</div>
+      <button class="modal-close" id="modal-close">닫기</button>
+    </div>
+
+    <div class="field-label">카메라 바디</div>
+    <input class="field-input" id="prof-body" type="text" placeholder="예: Leica SL3">
+
+    <div class="field-label">렌즈 (보유 목록)</div>
+    <input class="field-input" id="prof-lenses" type="text" placeholder="예: Vario-Elmarit 24-90mm, APO 50mm">
+
+    <div class="field-label">렌즈 최대 개방 조리개</div>
+    <input class="field-input" id="prof-maxap" type="text" placeholder="예: f/2.8 (24-90mm 광각단)">
+
+    <div class="field-label">실용 최대 ISO</div>
+    <input class="field-input" id="prof-maxiso" type="number" placeholder="6400">
+
+    <div class="field-label">보유 필터</div>
+    <div class="filter-checklist" id="filter-checklist"></div>
+
+    <div class="profile-badge" id="profile-badge" style="display:none;"></div>
+
+    <button class="save-btn" id="save-profile-btn">저장</button>
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="install-banner">
+  <div class="install-text">홈화면에 추가하면 앱처럼 바로 열 수 있어요</div>
+  <button class="install-btn" id="install-btn">추가</button>
+  <button class="install-dismiss" id="install-dismiss">✕</button>
+</div>
+
+<script src="js/calc.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
