@@ -9,8 +9,10 @@ window.LEICA_PRESETS = [
     body: 'Leica Q3',
     lenses: 'Summilux 28mm f/1.7 ASPH (fixed)',
     maxAperture: 'f/1.7',
+    apertureMin: 1.7, apertureMax: 16,
     focalMin: 28, focalMax: 28,
-    maxISO: 50000,
+    bodyMaxISO: 50000,
+    shutterMin: 1/2000, shutterMax: 30,
     note: '28mm 고정 렌즈 / 크롭 시 35·47mm 상당',
   },
   {
@@ -19,8 +21,10 @@ window.LEICA_PRESETS = [
     body: 'Leica Q3 43',
     lenses: 'Summilux 43mm f/2.0 ASPH (fixed)',
     maxAperture: 'f/2.0',
+    apertureMin: 2.0, apertureMax: 16,
     focalMin: 43, focalMax: 43,
-    maxISO: 50000,
+    bodyMaxISO: 50000,
+    shutterMin: 1/2000, shutterMax: 30,
     note: '43mm 고정 렌즈',
   },
   {
@@ -29,8 +33,10 @@ window.LEICA_PRESETS = [
     body: 'Leica SL3',
     lenses: 'Vario-Elmarit-SL 24-90mm f/2.8-4',
     maxAperture: 'f/2.8 (광각) / f/4 (망원)',
+    apertureMin: 2.8, apertureMax: 22,
     focalMin: 24, focalMax: 90,
-    maxISO: 100000,
+    bodyMaxISO: 100000,
+    shutterMin: 1/8000, shutterMax: 30,
     note: '범용 줌. 24mm f/2.8 ~ 90mm f/4',
   },
   {
@@ -39,8 +45,10 @@ window.LEICA_PRESETS = [
     body: 'Leica SL3',
     lenses: 'APO-Vario-Elmarit-SL 90-280mm f/2.8-4',
     maxAperture: 'f/2.8 (90mm) / f/4 (280mm)',
+    apertureMin: 2.8, apertureMax: 22,
     focalMin: 90, focalMax: 280,
-    maxISO: 100000,
+    bodyMaxISO: 100000,
+    shutterMin: 1/8000, shutterMax: 30,
     note: '망원 줌. 스포츠·야생동물·원거리 인물',
   },
   {
@@ -49,8 +57,10 @@ window.LEICA_PRESETS = [
     body: 'Leica SL3',
     lenses: 'Super-APO-Summicron-SL 21mm f/2 ASPH',
     maxAperture: 'f/2.0',
+    apertureMin: 2.0, apertureMax: 22,
     focalMin: 21, focalMax: 21,
-    maxISO: 100000,
+    bodyMaxISO: 100000,
+    shutterMin: 1/8000, shutterMax: 30,
     note: '울트라 광각. 풍경·건축·실내. 세계 최초 21mm 색수차 보정',
   },
   {
@@ -59,8 +69,10 @@ window.LEICA_PRESETS = [
     body: 'Leica SL3',
     lenses: 'APO-Summicron-SL 50mm f/2 ASPH',
     maxAperture: 'f/2.0',
+    apertureMin: 2.0, apertureMax: 22,
     focalMin: 50, focalMax: 50,
-    maxISO: 100000,
+    bodyMaxISO: 100000,
+    shutterMin: 1/8000, shutterMax: 30,
     note: '표준 단렌즈. 인물·스트리트·일상',
   },
   {
@@ -69,8 +81,10 @@ window.LEICA_PRESETS = [
     body: 'Leica SL3',
     lenses: 'Summicron-SL 35mm f/2 ASPH',
     maxAperture: 'f/2.0',
+    apertureMin: 2.0, apertureMax: 22,
     focalMin: 35, focalMax: 35,
-    maxISO: 100000,
+    bodyMaxISO: 100000,
+    shutterMin: 1/8000, shutterMax: 30,
     note: '광각 단렌즈. 스트리트·환경인물',
   },
   {
@@ -79,8 +93,10 @@ window.LEICA_PRESETS = [
     body: 'Leica SL3',
     lenses: 'APO-Summicron-SL 75mm f/2 ASPH',
     maxAperture: 'f/2.0',
+    apertureMin: 2.0, apertureMax: 22,
     focalMin: 75, focalMax: 75,
-    maxISO: 100000,
+    bodyMaxISO: 100000,
+    shutterMin: 1/8000, shutterMax: 30,
     note: '인물용 단렌즈. 압축감·보케',
   },
   {
@@ -89,8 +105,10 @@ window.LEICA_PRESETS = [
     body: '',
     lenses: '',
     maxAperture: '',
+    apertureMin: 1.4, apertureMax: 22,
     focalMin: null, focalMax: null,
-    maxISO: 6400,
+    bodyMaxISO: 6400,
+    shutterMin: 1/8000, shutterMax: 30,
     note: '',
   },
 ];
@@ -156,6 +174,8 @@ const SHUTTER_SPEEDS = [
   1/6,1/5,1/4,0.3,0.4,0.5,0.6,0.8,1,1.3,1.6,2,2.5,3,4,5,6,8,10,13,15,20,25,30
 ];
 
+window.SHUTTER_SPEEDS_ALL = SHUTTER_SPEEDS;
+
 const ISO_VALUES = [
   50,64,100,125,160,200,250,320,400,500,640,800,
   1000,1250,1600,2000,3200,6400,12800,25600,51200,102400
@@ -163,14 +183,21 @@ const ISO_VALUES = [
 
 // ── UTILS ──────────────────────────────────────────────────────────────────
 
-function snapShutter(t) {
-  return SHUTTER_SPEEDS.reduce((a, b) => Math.abs(b - t) < Math.abs(a - t) ? b : a);
+function snapShutter(t, minS, maxS) {
+  // 레인지 안으로 클램프 후 가장 가까운 표준값
+  const filtered = SHUTTER_SPEEDS.filter(s => s >= (minS || 1/8000) && s <= (maxS || 30));
+  const pool = filtered.length ? filtered : SHUTTER_SPEEDS;
+  return pool.reduce((a, b) => Math.abs(b - t) < Math.abs(a - t) ? b : a);
 }
-function snapISO(v, maxISO) {
-  const max = maxISO || 12800;
-  const clamped = Math.max(50, Math.min(max, v));
-  return ISO_VALUES.filter(i => i <= max)
-    .reduce((a, b) => Math.abs(b - clamped) < Math.abs(a - clamped) ? b : a);
+
+function snapISO(v, minISO, maxISO) {
+  // 레이어 1: 장비 한계 / 레이어 2: 사용자 기준
+  const min = minISO || 50;
+  const max = maxISO || 6400;
+  const clamped = Math.max(min, Math.min(max, v));
+  return ISO_VALUES.filter(i => i >= min && i <= max)
+    .reduce((a, b) => Math.abs(b - clamped) < Math.abs(a - clamped) ? b : a,
+      ISO_VALUES.find(i => i >= min) || 100);
 }
 
 window.fmtShutter = function(s) {
@@ -180,14 +207,18 @@ window.fmtShutter = function(s) {
 
 // ── CORE CALCULATION ───────────────────────────────────────────────────────
 
-window.calculate = function({ subjectId, speedKmh, goalId, focalLength,
-                               distance, ev, ndStops, cpl, aperture, maxISO }) {
+window.calculate = function({
+  subjectId, speedKmh, goalId, focalLength, distance, ev,
+  ndStops, cpl, aperture,
+  isoMin, isoMax,           // 사용자 설정 ISO 레인지
+  shutterMin, shutterMax,   // 사용자 설정 셔터 레인지
+}) {
   const goal       = GOALS.find(g => g.id === goalId);
   const CPL_STOPS  = cpl ? 1.5 : 0;
   const totalStops = ndStops + CPL_STOPS;
   const filterMult = Math.pow(2, totalStops);
 
-  // Required shutter without filter
+  // 1. 모션 목표에 맞는 기본 셔터
   let shutterBase;
   if (subjectId === 'static' || speedKmh === 0) {
     const map = { freeze: 1/250, slight: 1/60, motion: 1/8, long: 5 };
@@ -201,18 +232,23 @@ window.calculate = function({ subjectId, speedKmh, goalId, focalLength,
     shutterBase    = goal.blurPx / pxPerSec;
   }
 
+  // 2. 필터 적용 셔터 → 사용자 셔터 레인지 안으로 스냅
   const shutterWithFilter = shutterBase * filterMult;
-  const shutter           = snapShutter(shutterWithFilter);
+  const shutter = snapShutter(shutterWithFilter, shutterMin, shutterMax);
 
-  // Solve ISO from EV
-  // EV = log2(N²/t) + log2(ISO/100)
-  // ISO = 100 × 2^(EV - log2(N²/t))
-  // 조리개 열릴수록(N 작아짐) N² 작아져서 ISO 낮아짐 ✓
+  // 3. ISO 역산: EV = log2(N²/t) + log2(ISO/100)
+  //    ISO = 100 × 2^(EV - log2(N²/t))
+  //    N 작을수록(개방) ISO 낮아짐 ✓
   const isoRaw = 100 * Math.pow(2, ev - Math.log2((aperture * aperture) / shutter));
-  const iso    = snapISO(isoRaw, maxISO);
 
-  const warnHigh = iso >= (maxISO || 12800) * 0.8 && isoRaw > 800;
-  const warnLow  = isoRaw < 50;
+  // 4. 사용자 ISO 레인지 안으로 스냅
+  const iso = snapISO(isoRaw, isoMin, isoMax);
+
+  // 5. 범위 초과 경고
+  const isoOverMax = isoRaw > (isoMax || 6400);
+  const isoUnderMin = isoRaw < (isoMin || 50);
+  const shutterOutOfRange = shutterWithFilter < (shutterMin || 1/8000)
+                         || shutterWithFilter > (shutterMax || 30);
 
   return {
     shutter,
@@ -220,10 +256,12 @@ window.calculate = function({ subjectId, speedKmh, goalId, focalLength,
     shutterFmt:     window.fmtShutter(shutter),
     shutterBaseFmt: window.fmtShutter(shutterBase),
     iso,
+    isoRaw,
     aperture,
     totalStops,
     expComp: -totalStops,
-    warnHigh,
-    warnLow,
+    isoOverMax,
+    isoUnderMin,
+    shutterOutOfRange,
   };
 };
