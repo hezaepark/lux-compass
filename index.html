@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lux Compass">
+  <meta name="description" content="When the light is new. When the place is unknown.">
+  <title>Lux Compass</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-top">
+      <div class="header-brand">
+        <div class="app-eyebrow">Photography · Exposure</div>
+        <div class="app-name">Lux <span>Compass</span></div>
+        <div class="app-tagline" id="app-tagline">낯선 빛, 낯선 장소에서.</div>
+        <div class="app-subtitle" id="app-subtitle">낯선 환경에서 사진을 찍고 싶을 때 꺼내보세요.</div>
+      </div>
+    </div>
+    <div class="header-controls">
+      <div class="lang-btns">
+        <button class="lang-btn active" data-lang="ko">한국어</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ja">日本語</button>
+        <button class="lang-btn" data-lang="pl">PL</button>
+      </div>
+      <button class="gear-btn" id="gear-btn">
+        <div class="gear-dot" id="gear-dot"></div>
+        <span id="gear-btn-label">장비 설정</span>
+        <span class="gear-profile-name" id="gear-profile-name"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 1. SCENE -->
+  <div class="section">
+    <div class="section-label" id="lbl-scene">장면 밝기</div>
+    <div class="scene-grid" id="scene-grid"></div>
+    <div id="custom-ev-row" style="display:none;">
+      <div class="slider-wrap">
+        <div class="slider-header">
+          <span class="slider-label" id="lbl-customev">EV 직접 입력</span>
+          <span class="slider-val" id="custom-ev-val">EV 13</span>
+        </div>
+        <input type="range" id="custom-ev-slider" min="0" max="20" step="0.5" value="13">
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SUBJECT -->
+  <div class="section">
+    <div class="section-label" id="lbl-subject">피사체</div>
+    <div class="pill-group" id="subject-pills"></div>
+    <div id="speed-row" style="margin-top:13px;">
+      <div class="slider-wrap">
+        <div class="slider-header">
+          <span class="slider-label" id="lbl-speed">이동 속도</span>
+          <span class="slider-val" id="speed-val">5 km/h</span>
+        </div>
+        <input type="range" id="speed-slider" min="1" max="200" step="1" value="5">
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. GOAL -->
+  <div class="section">
+    <div class="section-label" id="lbl-goal">촬영 목표</div>
+    <div class="goal-list" id="goal-list"></div>
+  </div>
+
+  <!-- 4. LENS / DISTANCE -->
+  <div class="section">
+    <div class="section-label" id="lbl-lens">렌즈 · 거리</div>
+    <div class="slider-wrap">
+      <div class="slider-header">
+        <span class="slider-label" id="lbl-focal">초점거리</span>
+        <span class="slider-val" id="focal-val">50mm</span>
+      </div>
+      <input type="range" id="focal-slider" min="8" max="600" step="1" value="50">
+    </div>
+    <div class="slider-wrap" id="distance-row">
+      <div class="slider-header">
+        <span class="slider-label" id="lbl-distance">피사체까지 거리</span>
+        <span class="slider-val" id="distance-val">5m</span>
+      </div>
+      <input type="range" id="distance-slider" min="0.5" max="200" step="0.5" value="5">
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-header">
+        <span class="slider-label" id="lbl-aperture">조리개</span>
+        <span class="slider-val" id="aperture-val">f/8.0</span>
+      </div>
+      <input type="range" id="aperture-slider" min="1.0" max="22" step="0.1" value="8">
+    </div>
+  </div>
+
+  <!-- 5. FILTERS -->
+  <div class="section">
+    <div class="section-label" id="lbl-filter">ND 필터</div>
+    <div class="filter-row" id="nd-buttons"></div>
+    <div class="toggle-row">
+      <button class="toggle" id="cpl-toggle"><div class="toggle-thumb"></div></button>
+      <span class="toggle-label" id="cpl-label">CPL 편광 필터 (-1.5 stop)</span>
+    </div>
+  </div>
+
+  <!-- 6. RESULTS -->
+  <div class="result-section">
+    <div class="section-label" id="lbl-results">계산 결과</div>
+
+    <div class="result-grid">
+      <div class="result-card main">
+        <div class="rc-label" id="lbl-res-shutter">셔터스피드</div>
+        <div class="rc-val" id="res-shutter">—</div>
+      </div>
+      <div class="result-card">
+        <div class="rc-label" id="lbl-res-iso">ISO</div>
+        <div class="rc-val" id="res-iso">—</div>
+      </div>
+      <div class="result-card">
+        <div class="rc-label" id="lbl-res-aperture">조리개</div>
+        <div class="rc-val" id="res-aperture">—</div>
+      </div>
+    </div>
+
+    <div class="result-sub-grid">
+      <div class="result-sub">
+        <div class="rs-label" id="lbl-res-base">필터 없을 때</div>
+        <div class="rs-val" id="res-base">—</div>
+      </div>
+      <div class="result-sub">
+        <div class="rs-label" id="lbl-res-stops">필터 감소</div>
+        <div class="rs-val" id="res-stops">—</div>
+      </div>
+      <div class="result-sub">
+        <div class="rs-label" id="lbl-res-comp">노출 보정</div>
+        <div class="rs-val" id="res-comp">—</div>
+      </div>
+    </div>
+
+    <div class="warning" id="res-warning" style="display:none;"></div>
+    <div class="result-note" id="res-note"></div>
+  </div>
+
+  <!-- 7. FEEDBACK -->
+  <div class="feedback-toggle-row" id="feedback-toggle-row">
+    <div>
+      <div class="ftl-main" id="lbl-feedback">📸 결과물 피드백</div>
+      <div class="ftl-sub" id="lbl-feedback-sub">찍은 사진을 바탕으로 설정 수정값 제안받기</div>
+    </div>
+    <span id="feedback-arrow" style="color:#333;font-size:11px;">▼</span>
+  </div>
+
+  <div class="feedback-body" id="feedback-body">
+    <textarea class="feedback-textarea" id="feedback-text"
+      placeholder="예: 뒷배경이 너무 밝게 날아갔어요"></textarea>
+    <button class="feedback-send" id="feedback-send-btn">수정값 요청 →</button>
+    <div class="feedback-result" id="feedback-result"></div>
+  </div>
+
+  <!-- 8. RESET -->
+  <div class="bottom-actions">
+    <button class="reset-btn" id="reset-btn">↺ 초기화</button>
+  </div>
+
+</div><!-- /.app -->
+
+
+<!-- GEAR MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">장비 프로파일</div>
+      <button class="modal-close" id="modal-close">닫기</button>
+    </div>
+
+    <!-- Leica presets -->
+    <div class="field-label" id="lbl-preset">라이카 프리셋</div>
+    <div class="preset-list" id="preset-list"></div>
+
+    <!-- Preset summary (non-custom) -->
+    <div class="preset-summary" id="preset-summary"></div>
+
+    <hr class="modal-divider">
+
+    <!-- Custom fields -->
+    <div class="field-label" id="lbl-custom-entry">직접 입력</div>
+    <div id="custom-fields" style="display:none;">
+      <div class="field-label" id="lbl-prof-body">카메라 바디</div>
+      <input class="field-input" id="prof-body" type="text" placeholder="예: Leica SL3">
+
+      <div class="field-label" id="lbl-prof-lenses">렌즈</div>
+      <input class="field-input" id="prof-lenses" type="text" placeholder="예: Vario-Elmarit 24-90mm">
+
+      <div class="field-label" id="lbl-prof-maxap">최대 개방 조리개</div>
+      <input class="field-input" id="prof-maxap" type="text" placeholder="예: f/2.8">
+
+      <div class="field-label" id="lbl-prof-maxiso">실용 최대 ISO</div>
+      <input class="field-input" id="prof-maxiso" type="number" placeholder="6400">
+    </div>
+
+    <!-- Owned filters (always visible) -->
+    <div class="field-label" id="lbl-prof-filters">보유 필터</div>
+    <div class="filter-checklist" id="filter-checklist"></div>
+
+    <button class="save-btn" id="save-profile-btn">저장</button>
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="install-banner">
+  <span id="install-text">홈화면에 추가하면 앱처럼 바로 열 수 있어요</span>
+  <button class="install-btn" id="install-btn">추가</button>
+  <button class="install-dismiss" id="install-dismiss">✕</button>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/calc.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
