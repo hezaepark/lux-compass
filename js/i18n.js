@@ -60,8 +60,9 @@ window.I18N = {
       note: ['SL3 36×24mm / 9456px 기준 계산', '조리개 고정 → 셔터·ISO 최적화', '실제 환경에 따라 ±1 stop 조정 권장'],
     },
     warnings: {
-      isoHigh: 'ISO가 높습니다. ND 강도를 줄이거나 조리개를 더 여세요.',
-      isoLow: 'ISO가 너무 낮습니다. ND 강도를 줄이거나 조리개를 조이세요.',
+      isoOverMax: 'ISO {max} 초과 — 조리개를 더 열거나 ND를 줄이세요.',
+      isoUnderMin: 'ISO가 너무 낮습니다 — 조리개를 조이거나 ND를 추가하세요.',
+      shutterOutOfRange: '셔터스피드가 설정 범위를 벗어났습니다.',
     },
     feedback: {
       placeholder: '예: 뒷배경이 너무 밝게 날아갔어요\n예: 사람이 약간 흔들렸어요\n예: 전체적으로 너무 어둡게 나왔어요',
@@ -87,6 +88,9 @@ window.I18N = {
       lensesPlaceholder: '예: Vario-Elmarit 24-90mm',
       maxApPlaceholder: '예: f/2.8',
       maxISOPlaceholder: '6400',
+      rangeISO: 'ISO 촬영 기준 범위',
+      rangeShutter: '셔터스피드 촬영 기준 범위',
+      rangeAperture: '조리개 촬영 기준 범위',
     },
     install: {
       text: '홈화면에 추가하면 앱처럼 바로 열 수 있어요',
@@ -154,8 +158,9 @@ window.I18N = {
       note: ['Based on SL3 36×24mm / 9456px sensor', 'Fixed aperture → shutter & ISO optimized', 'Adjust ±1 stop for actual conditions'],
     },
     warnings: {
-      isoHigh: 'ISO is high. Reduce ND strength or open aperture.',
-      isoLow: 'ISO too low. Reduce ND strength or close aperture.',
+      isoOverMax: 'ISO exceeds {max} limit — open aperture or reduce ND.',
+      isoUnderMin: 'ISO too low — close aperture or add ND filter.',
+      shutterOutOfRange: 'Shutter speed is outside your set range.',
     },
     feedback: {
       placeholder: 'e.g. Background was blown out\ne.g. Subject was slightly blurry\ne.g. Overall too dark',
@@ -181,6 +186,9 @@ window.I18N = {
       lensesPlaceholder: 'e.g. Vario-Elmarit 24-90mm',
       maxApPlaceholder: 'e.g. f/2.8',
       maxISOPlaceholder: '6400',
+      rangeISO: 'ISO shooting range',
+      rangeShutter: 'Shutter speed range',
+      rangeAperture: 'Aperture range',
     },
     install: {
       text: 'Add to home screen to use like an app',
@@ -248,8 +256,9 @@ window.I18N = {
       note: ['SL3 36×24mm / 9456px基準', '絞り固定 → シャッター・ISO最適化', '実際の環境に応じて±1 stop調整推奨'],
     },
     warnings: {
-      isoHigh: 'ISOが高すぎます。ND強度を下げるか、絞りを開けてください。',
-      isoLow: 'ISOが低すぎます。ND強度を下げるか、絞りを絞ってください。',
+      isoOverMax: 'ISO {max} 超過 — 絞りを開けるかNDを減らしてください。',
+      isoUnderMin: 'ISOが低すぎます — 絞るかNDフィルターを追加してください。',
+      shutterOutOfRange: 'シャッタースピードが設定範囲外です。',
     },
     feedback: {
       placeholder: '例：背景が白飛びしました\n例：人物が少しブレました\n例：全体的に暗すぎました',
@@ -275,6 +284,9 @@ window.I18N = {
       lensesPlaceholder: '例：Vario-Elmarit 24-90mm',
       maxApPlaceholder: '例：f/2.8',
       maxISOPlaceholder: '6400',
+      rangeISO: 'ISO撮影基準範囲',
+      rangeShutter: 'シャッタースピード範囲',
+      rangeAperture: '絞り範囲',
     },
     install: {
       text: 'ホーム画面に追加してアプリとして使えます',
@@ -342,8 +354,9 @@ window.I18N = {
       note: ['Sensor SL3 36×24mm / 9456px', 'Stała przysłona → optymalizacja czasu i ISO', 'Dostosuj ±1 stop do warunków'],
     },
     warnings: {
-      isoHigh: 'ISO jest wysokie. Zmniejsz filtr ND lub otwórz przysłonę.',
-      isoLow: 'ISO zbyt niskie. Zmniejsz filtr ND lub przymknij przysłonę.',
+      isoOverMax: 'ISO przekracza {max} — otwórz przysłonę lub zmniejsz ND.',
+      isoUnderMin: 'ISO zbyt niskie — przymknij przysłonę lub dodaj filtr ND.',
+      shutterOutOfRange: 'Czas naświetlania poza ustawionym zakresem.',
     },
     feedback: {
       placeholder: 'np. Tło było prześwietlone\nnp. Obiekt był lekko rozmyty\nnp. Całość wyszła za ciemna',
@@ -369,6 +382,9 @@ window.I18N = {
       lensesPlaceholder: 'np. Vario-Elmarit 24-90mm',
       maxApPlaceholder: 'np. f/2.8',
       maxISOPlaceholder: '6400',
+      rangeISO: 'Zakres ISO',
+      rangeShutter: 'Zakres czasu naświetlania',
+      rangeAperture: 'Zakres przysłony',
     },
     install: {
       text: 'Dodaj do ekranu głównego, aby używać jak aplikacji',
