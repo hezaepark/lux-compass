@@ -20,8 +20,15 @@ const DEFAULT_PROFILE = {
   body: 'Leica SL3',
   lenses: 'Vario-Elmarit-SL 24-90mm f/2.8-4',
   maxAperture: 'f/2.8',
-  maxISO: 100000,
+  bodyMaxISO: 100000,
   ownedFilters: ['ND8', 'ND64', 'ND1000', 'CPL'],
+  // 사용자 촬영 기준 레인지
+  isoMin: 50,
+  isoMax: 3200,
+  shutterMin: 1/8000,
+  shutterMax: 30,
+  apertureMin: 2.8,
+  apertureMax: 22,
 };
 
 let state   = { ...DEFAULT_STATE };
@@ -61,38 +68,35 @@ function applyLang() {
   const tx = t();
   document.documentElement.lang = state.lang;
 
-  // static text
-  q('#app-tagline').textContent  = tx.tagline;
-  q('#app-subtitle').textContent = tx.subtitle;
-  q('#gear-btn-label').textContent = tx.gearBtn;
-  q('#lbl-scene').textContent    = tx.sections.scene;
-  q('#lbl-subject').textContent  = tx.sections.subject;
-  q('#lbl-goal').textContent     = tx.sections.goal;
-  q('#lbl-lens').textContent     = tx.sections.lens;
-  q('#lbl-filter').textContent   = tx.sections.filter;
-  q('#lbl-results').textContent  = tx.sections.results;
-  q('#lbl-feedback').textContent = tx.sections.feedback;
-  q('#lbl-feedback-sub').textContent = tx.sections.feedbackSub;
-  q('#cpl-label').textContent    = tx.cpl;
-  q('#lbl-res-shutter').textContent  = tx.results.shutter;
-  q('#lbl-res-iso').textContent      = tx.results.iso;
-  q('#lbl-res-aperture').textContent = tx.results.aperture;
-  q('#lbl-res-base').textContent     = tx.results.baseShutter;
-  q('#lbl-res-stops').textContent    = tx.results.filterStops;
-  q('#lbl-res-comp').textContent     = tx.results.expComp;
-  q('#res-note').innerHTML = tx.results.note.map(n => `· ${n}`).join('<br>');
-  q('#feedback-text').placeholder = tx.feedback.placeholder;
+  q('#app-tagline').textContent       = tx.tagline;
+  q('#app-subtitle').textContent      = tx.subtitle;
+  q('#gear-btn-label').textContent    = tx.gearBtn;
+  q('#lbl-scene').textContent         = tx.sections.scene;
+  q('#lbl-subject').textContent       = tx.sections.subject;
+  q('#lbl-goal').textContent          = tx.sections.goal;
+  q('#lbl-lens').textContent          = tx.sections.lens;
+  q('#lbl-filter').textContent        = tx.sections.filter;
+  q('#lbl-results').textContent       = tx.sections.results;
+  q('#lbl-feedback').textContent      = tx.sections.feedback;
+  q('#lbl-feedback-sub').textContent  = tx.sections.feedbackSub;
+  q('#cpl-label').textContent         = tx.cpl;
+  q('#lbl-res-shutter').textContent   = tx.results.shutter;
+  q('#lbl-res-iso').textContent       = tx.results.iso;
+  q('#lbl-res-aperture').textContent  = tx.results.aperture;
+  q('#lbl-res-base').textContent      = tx.results.baseShutter;
+  q('#lbl-res-stops').textContent     = tx.results.filterStops;
+  q('#lbl-res-comp').textContent      = tx.results.expComp;
+  q('#res-note').innerHTML            = tx.results.note.map(n => `· ${n}`).join('<br>');
+  q('#feedback-text').placeholder     = tx.feedback.placeholder;
   q('#feedback-send-btn').textContent = tx.feedback.send;
-  q('#reset-btn').textContent     = tx.reset;
+  q('#reset-btn').textContent         = tx.reset;
 
-  // sliders
-  q('#lbl-focal').textContent    = tx.sliders.focalLength;
-  q('#lbl-distance').textContent = tx.sliders.distance;
-  q('#lbl-aperture').textContent = tx.sliders.aperture;
-  q('#lbl-speed').textContent    = tx.sliders.speed;
-  q('#lbl-customev').textContent = tx.sliders.customEV;
+  q('#lbl-focal').textContent         = tx.sliders.focalLength;
+  q('#lbl-distance').textContent      = tx.sliders.distance;
+  q('#lbl-aperture').textContent      = tx.sliders.aperture;
+  q('#lbl-speed').textContent         = tx.sliders.speed;
+  q('#lbl-customev').textContent      = tx.sliders.customEV;
 
-  // profile modal
   q('#modal-title').textContent       = tx.profile.title;
   q('#modal-close').textContent       = tx.profile.close;
   q('#save-profile-btn').textContent  = tx.profile.save;
@@ -110,7 +114,11 @@ function applyLang() {
   q('#install-text').textContent      = tx.install.text;
   q('#install-btn').textContent       = tx.install.add;
 
-  // lang buttons
+  // 레인지 라벨
+  q('#lbl-range-iso').textContent     = tx.profile.rangeISO;
+  q('#lbl-range-shutter').textContent = tx.profile.rangeShutter;
+  q('#lbl-range-aperture').textContent= tx.profile.rangeAperture;
+
   qq('.lang-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.lang === state.lang);
   });
@@ -226,18 +234,20 @@ function setSlider(sid, vid, val, fmt) {
 
 function renderResults() {
   const tx = t();
-  const ndStops = getNDStops();
   const res = calculate({
-    subjectId: state.subjectId,
-    speedKmh:  state.speedKmh,
-    goalId:    state.goalId,
+    subjectId:   state.subjectId,
+    speedKmh:    state.speedKmh,
+    goalId:      state.goalId,
     focalLength: state.focalLength,
-    distance:  state.distance,
-    ev:        getEV(),
-    ndStops,
-    cpl:       state.cpl,
-    aperture:  state.aperture,
-    maxISO:    profile.maxISO || 12800,
+    distance:    state.distance,
+    ev:          getEV(),
+    ndStops:     getNDStops(),
+    cpl:         state.cpl,
+    aperture:    state.aperture,
+    isoMin:      profile.isoMin,
+    isoMax:      profile.isoMax,
+    shutterMin:  profile.shutterMin,
+    shutterMax:  profile.shutterMax,
   });
 
   q('#res-shutter').textContent  = res.shutterFmt;
@@ -250,11 +260,15 @@ function renderResults() {
     ? '±0' : `${res.expComp > 0 ? '+' : ''}${res.expComp.toFixed(1)}`;
 
   const warn = q('#res-warning');
-  if (res.warnHigh) {
-    warn.textContent = '⚠ ' + tx.warnings.isoHigh;
+  if (res.isoOverMax) {
+    warn.textContent = '⚠ ' + tx.warnings.isoOverMax
+      .replace('{max}', profile.isoMax.toLocaleString());
     warn.style.display = 'block';
-  } else if (res.warnLow) {
-    warn.textContent = '⚠ ' + tx.warnings.isoLow;
+  } else if (res.isoUnderMin) {
+    warn.textContent = '⚠ ' + tx.warnings.isoUnderMin;
+    warn.style.display = 'block';
+  } else if (res.shutterOutOfRange) {
+    warn.textContent = '⚠ ' + tx.warnings.shutterOutOfRange;
     warn.style.display = 'block';
   } else {
     warn.style.display = 'none';
@@ -283,6 +297,18 @@ function closeModal() {
   q('#modal').className = 'modal-overlay';
 }
 
+// ISO 표준값 목록
+const ISO_STEPS = [50,100,200,400,800,1600,3200,6400,12800,25600,51200,102400];
+const SHUTTER_STEPS = [
+  {label:'1/8000', val:1/8000},{label:'1/4000', val:1/4000},{label:'1/2000', val:1/2000},
+  {label:'1/1000', val:1/1000},{label:'1/500',  val:1/500 },{label:'1/250',  val:1/250 },
+  {label:'1/125',  val:1/125 },{label:'1/60',   val:1/60  },{label:'1/30',   val:1/30  },
+  {label:'1/15',   val:1/15  },{label:'1/8',    val:1/8   },{label:'1/4',    val:1/4   },
+  {label:'0.5s',   val:0.5   },{label:'1s',     val:1     },{label:'2s',     val:2     },
+  {label:'5s',     val:5     },{label:'10s',    val:10    },{label:'30s',    val:30    },
+];
+const APERTURE_STEPS = [1.0,1.2,1.4,1.7,2.0,2.8,4.0,5.6,8.0,11,16,22];
+
 function renderModal() {
   // Preset buttons
   const pw = q('#preset-list');
@@ -294,25 +320,27 @@ function renderModal() {
   pw.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const preset = LEICA_PRESETS.find(p => p.id === btn.dataset.preset);
-      profile.presetId = preset.id;
+      profile.presetId   = preset.id;
       if (preset.id !== 'custom') {
         profile.body        = preset.body;
         profile.lenses      = preset.lenses;
         profile.maxAperture = preset.maxAperture;
-        profile.maxISO      = preset.maxISO;
-        // update focal slider range
-        if (preset.focalMin && preset.focalMax) {
-          state.focalLength = preset.focalMin;
-        }
+        profile.bodyMaxISO  = preset.bodyMaxISO;
+        profile.apertureMin = preset.apertureMin;
+        profile.apertureMax = preset.apertureMax;
+        profile.shutterMin  = preset.shutterMin;
+        profile.shutterMax  = preset.shutterMax;
+        // 사용자 레인지도 장비 스펙 안으로
+        profile.isoMax      = Math.min(profile.isoMax || 3200, preset.bodyMaxISO);
       }
       renderModal();
     });
   });
 
-  // Custom fields
+  // Preset summary / custom fields
   const isCustom = profile.presetId === 'custom';
-  q('#custom-fields').style.display = isCustom ? 'block' : 'none';
-  q('#preset-summary').style.display = isCustom ? 'none' : 'block';
+  q('#custom-fields').style.display   = isCustom ? 'block' : 'none';
+  q('#preset-summary').style.display  = isCustom ? 'none'  : 'block';
 
   if (!isCustom) {
     const preset = LEICA_PRESETS.find(p => p.id === profile.presetId);
@@ -320,14 +348,36 @@ function renderModal() {
       <div class="summary-row"><span>Body</span>${preset.body}</div>
       <div class="summary-row"><span>Lens</span>${preset.lenses}</div>
       <div class="summary-row"><span>Aperture</span>${preset.maxAperture}</div>
-      <div class="summary-row"><span>Max ISO</span>${preset.maxISO.toLocaleString()}</div>
+      <div class="summary-row"><span>Max ISO</span>${preset.bodyMaxISO.toLocaleString()}</div>
     `;
   }
 
   q('#prof-body').value   = profile.body || '';
   q('#prof-lenses').value = profile.lenses || '';
   q('#prof-maxap').value  = profile.maxAperture || '';
-  q('#prof-maxiso').value = profile.maxISO || 6400;
+  q('#prof-maxiso').value = profile.bodyMaxISO || 6400;
+
+  // ── 사용자 레인지 렌더 ──────────────────────────────────────────────────
+
+  // ISO 레인지
+  renderRangePills('iso-min-pills', ISO_STEPS, profile.isoMin,
+    v => { profile.isoMin = v; renderRangePills('iso-min-pills', ISO_STEPS, v,
+      vv => { profile.isoMin = vv; }); renderResults(); });
+  renderRangePills('iso-max-pills', ISO_STEPS, profile.isoMax,
+    v => { profile.isoMax = v; renderRangePills('iso-max-pills', ISO_STEPS, v,
+      vv => { profile.isoMax = vv; }); renderResults(); });
+
+  // 셔터 레인지
+  renderRangePillsShutter('shutter-min-pills', profile.shutterMin,
+    v => { profile.shutterMin = v; renderResults(); });
+  renderRangePillsShutter('shutter-max-pills', profile.shutterMax,
+    v => { profile.shutterMax = v; renderResults(); });
+
+  // 조리개 레인지
+  renderRangePillsAperture('aperture-min-pills', profile.apertureMin,
+    v => { profile.apertureMin = v; renderResults(); });
+  renderRangePillsAperture('aperture-max-pills', profile.apertureMax,
+    v => { profile.apertureMax = v; renderResults(); });
 
   // Filter checklist
   const fw = q('#filter-checklist');
@@ -347,13 +397,61 @@ function renderModal() {
   });
 }
 
+function renderRangePills(containerId, steps, currentVal, onChange) {
+  const wrap = q('#' + containerId);
+  if (!wrap) return;
+  wrap.innerHTML = steps.map(v => `
+    <button class="range-pill ${currentVal === v ? 'active' : ''}" data-val="${v}">
+      ${v.toLocaleString()}
+    </button>`).join('');
+  wrap.querySelectorAll('.range-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      onChange(parseInt(btn.dataset.val));
+      wrap.querySelectorAll('.range-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+}
+
+function renderRangePillsShutter(containerId, currentVal, onChange) {
+  const wrap = q('#' + containerId);
+  if (!wrap) return;
+  wrap.innerHTML = SHUTTER_STEPS.map(s => `
+    <button class="range-pill ${Math.abs(currentVal - s.val) < 0.0001 ? 'active' : ''}" data-val="${s.val}">
+      ${s.label}
+    </button>`).join('');
+  wrap.querySelectorAll('.range-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      onChange(parseFloat(btn.dataset.val));
+      wrap.querySelectorAll('.range-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+}
+
+function renderRangePillsAperture(containerId, currentVal, onChange) {
+  const wrap = q('#' + containerId);
+  if (!wrap) return;
+  wrap.innerHTML = APERTURE_STEPS.map(v => `
+    <button class="range-pill ${Math.abs(currentVal - v) < 0.01 ? 'active' : ''}" data-val="${v}">
+      f/${v}
+    </button>`).join('');
+  wrap.querySelectorAll('.range-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      onChange(parseFloat(btn.dataset.val));
+      wrap.querySelectorAll('.range-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+}
+
 function saveProfileFromModal() {
   const isCustom = profile.presetId === 'custom';
   if (isCustom) {
     profile.body        = q('#prof-body').value.trim();
     profile.lenses      = q('#prof-lenses').value.trim();
     profile.maxAperture = q('#prof-maxap').value.trim();
-    profile.maxISO      = parseInt(q('#prof-maxiso').value) || 6400;
+    profile.bodyMaxISO  = parseInt(q('#prof-maxiso').value) || 6400;
   }
   saveProfile(); closeModal(); renderAll();
 }
@@ -381,7 +479,10 @@ async function sendFeedback() {
     ndStops:     getNDStops(),
     cpl:         state.cpl,
     aperture:    state.aperture,
-    maxISO:      profile.maxISO,
+    isoMin:      profile.isoMin,
+    isoMax:      profile.isoMax,
+    shutterMin:  profile.shutterMin,
+    shutterMax:  profile.shutterMax,
   });
 
   const subjectTx = t().subjects[state.subjectId];
@@ -396,10 +497,10 @@ Current settings:
 - Result: Shutter ${res.shutterFmt} / ISO ${res.iso} / f/${res.aperture.toFixed(1)}
 - Filters: ND ${state.nd}${state.cpl ? ' + CPL' : ''} (${res.totalStops.toFixed(1)} stop total)
 - Focal: ${state.focalLength}mm / Distance: ${state.distance}m
+- User ISO range: ${profile.isoMin} ~ ${profile.isoMax}
+- User shutter range: ${window.fmtShutter(profile.shutterMin)} ~ ${window.fmtShutter(profile.shutterMax)}
 ${profile.body    ? `- Body: ${profile.body}` : ''}
 ${profile.lenses  ? `- Lens: ${profile.lenses}` : ''}
-${profile.maxAperture ? `- Max aperture: ${profile.maxAperture}` : ''}
-${profile.maxISO  ? `- Practical max ISO: ${profile.maxISO}` : ''}
 ${profile.ownedFilters?.length ? `- Owned filters: ${profile.ownedFilters.join(', ')}` : ''}
 
 User feedback: "${text}"
@@ -407,7 +508,7 @@ Response language: ${state.lang === 'ko' ? 'Korean' : state.lang === 'ja' ? 'Jap
 `.trim();
 
   const sys = `You are an expert photography assistant. The user shot a photo using the settings above and gives feedback.
-Suggest specific corrected settings. Respect the gear limitations (max aperture, max ISO, owned filters).
+Suggest specific corrected settings. Respect the user's ISO and shutter range limits strictly.
 Reply concisely in plain text (no markdown). Format: cause (1-2 lines) → corrected values (specific numbers) → one tip.`;
 
   try {
@@ -438,11 +539,11 @@ Reply concisely in plain text (no markdown). Format: cause (1-2 lines) → corre
 
 function bindSliders() {
   const bindings = [
-    ['focal-slider',    'focal-val',    v => `${v}mm`,         v => { state.focalLength = v; }],
+    ['focal-slider',    'focal-val',    v => `${v}mm`,            v => { state.focalLength = v; }],
     ['aperture-slider', 'aperture-val', v => `f/${v.toFixed(1)}`, v => { state.aperture = v; }],
-    ['speed-slider',    'speed-val',    v => `${v} km/h`,      v => { state.speedKmh = v; }],
-    ['distance-slider', 'distance-val', v => `${v}m`,          v => { state.distance = v; }],
-    ['custom-ev-slider','custom-ev-val',v => `EV ${v}`,        v => { state.customEV = v; }],
+    ['speed-slider',    'speed-val',    v => `${v} km/h`,         v => { state.speedKmh = v; }],
+    ['distance-slider', 'distance-val', v => `${v}m`,             v => { state.distance = v; }],
+    ['custom-ev-slider','custom-ev-val',v => `EV ${v}`,           v => { state.customEV = v; }],
   ];
   bindings.forEach(([sid, vid, fmt, setter]) => {
     const s = q('#' + sid);
@@ -484,7 +585,6 @@ document.addEventListener('DOMContentLoaded', () => {
   bindSliders();
   renderAll();
 
-  // Lang switcher
   qq('.lang-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       state.lang = btn.dataset.lang;
@@ -492,29 +592,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Gear modal
   q('#gear-btn').addEventListener('click', openModal);
   q('#modal-close').addEventListener('click', closeModal);
   q('#modal').addEventListener('click', e => { if (e.target === q('#modal')) closeModal(); });
   q('#save-profile-btn').addEventListener('click', saveProfileFromModal);
 
-  // CPL
   q('#cpl-toggle').addEventListener('click', () => {
     state.cpl = !state.cpl;
     saveState(); renderFilters(); renderResults();
   });
 
-  // Feedback
   q('#feedback-toggle-row').addEventListener('click', () => {
     state.feedbackOpen = !state.feedbackOpen;
     saveState(); renderFeedbackToggle();
   });
   q('#feedback-send-btn').addEventListener('click', sendFeedback);
-
-  // Reset
   q('#reset-btn').addEventListener('click', resetState);
 
-  // Install
   q('#install-btn').addEventListener('click', async () => {
     if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
     q('#install-banner').classList.remove('show');
@@ -524,7 +618,6 @@ document.addEventListener('DOMContentLoaded', () => {
     q('#install-banner').classList.remove('show');
   });
 
-  // SW
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
