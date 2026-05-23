@@ -1,4 +1,4 @@
-// ���� LUX COMPASS 쨌 app.js ����������������������������������������������������������������������������������������������������
+// ── LUX COMPASS · app.js ──────────────────────────────────────────────────
 
 const DEFAULT_STATE = {
   lang: 'ko',
@@ -27,7 +27,7 @@ const DEFAULT_PROFILE = {
 let state   = { ...DEFAULT_STATE };
 let profile = { ...DEFAULT_PROFILE };
 
-// ���� STORAGE ��������������������������������������������������������������������������������������������������������������������������������
+// ── STORAGE ────────────────────────────────────────────────────────────────
 
 function load() {
   try {
@@ -40,7 +40,7 @@ function load() {
 const saveState   = () => localStorage.setItem('lc_state',   JSON.stringify(state));
 const saveProfile = () => localStorage.setItem('lc_profile', JSON.stringify(profile));
 
-// ���� HELPERS ��������������������������������������������������������������������������������������������������������������������������������
+// ── HELPERS ────────────────────────────────────────────────────────────────
 
 const q  = sel => document.querySelector(sel);
 const qq = sel => [...document.querySelectorAll(sel)];
@@ -55,7 +55,7 @@ function getNDStops() {
       ?? ND_FILTERS.find(f => f.label === state.nd)?.stops ?? 0;
 }
 
-// ���� LANGUAGE ������������������������������������������������������������������������������������������������������������������������������
+// ── LANGUAGE ───────────────────────────────────────────────────────────────
 
 function applyLang() {
   const tx = t();
@@ -80,7 +80,7 @@ function applyLang() {
   q('#lbl-res-base').textContent     = tx.results.baseShutter;
   q('#lbl-res-stops').textContent    = tx.results.filterStops;
   q('#lbl-res-comp').textContent     = tx.results.expComp;
-  q('#res-note').innerHTML = tx.results.note.map(n => `쨌 ${n}`).join('<br>');
+  q('#res-note').innerHTML = tx.results.note.map(n => `· ${n}`).join('<br>');
   q('#feedback-text').placeholder = tx.feedback.placeholder;
   q('#feedback-send-btn').textContent = tx.feedback.send;
   q('#reset-btn').textContent     = tx.reset;
@@ -116,7 +116,7 @@ function applyLang() {
   });
 }
 
-// ���� RENDER ����������������������������������������������������������������������������������������������������������������������������������
+// ── RENDER ─────────────────────────────────────────────────────────────────
 
 function renderAll() {
   applyLang();
@@ -197,7 +197,7 @@ function renderFilters() {
   const wrap = q('#nd-buttons');
   wrap.innerHTML = ND_FILTER_LABELS.map(label => `
     <button class="filter-btn ${state.nd === label ? 'active' : ''}" data-nd="${label}">
-      ${label === 'ND8' ? label + ' ��' : label}
+      ${label === 'ND8' ? label + ' ★' : label}
     </button>`).join('');
   wrap.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -245,16 +245,16 @@ function renderResults() {
   q('#res-aperture').textContent = `f/${res.aperture.toFixed(1)}`;
   q('#res-base').textContent     = res.shutterBaseFmt;
   q('#res-stops').textContent    = res.totalStops > 0
-    ? `-${res.totalStops.toFixed(1)} stop` : '��';
+    ? `-${res.totalStops.toFixed(1)} stop` : '—';
   q('#res-comp').textContent     = res.expComp === 0
-    ? '짹0' : `${res.expComp > 0 ? '+' : ''}${res.expComp.toFixed(1)}`;
+    ? '±0' : `${res.expComp > 0 ? '+' : ''}${res.expComp.toFixed(1)}`;
 
   const warn = q('#res-warning');
   if (res.warnHigh) {
-    warn.textContent = '�� ' + tx.warnings.isoHigh;
+    warn.textContent = '⚠ ' + tx.warnings.isoHigh;
     warn.style.display = 'block';
   } else if (res.warnLow) {
-    warn.textContent = '�� ' + tx.warnings.isoLow;
+    warn.textContent = '⚠ ' + tx.warnings.isoLow;
     warn.style.display = 'block';
   } else {
     warn.style.display = 'none';
@@ -263,7 +263,7 @@ function renderResults() {
 
 function renderFeedbackToggle() {
   q('#feedback-body').className = 'feedback-body' + (state.feedbackOpen ? ' open' : '');
-  q('#feedback-arrow').textContent = state.feedbackOpen ? '��' : '��';
+  q('#feedback-arrow').textContent = state.feedbackOpen ? '▲' : '▼';
 }
 
 function renderGearBtn() {
@@ -273,7 +273,7 @@ function renderGearBtn() {
     ? (profile.body || '').split(' ').slice(-1)[0] : '';
 }
 
-// ���� PROFILE MODAL ��������������������������������������������������������������������������������������������������������������������
+// ── PROFILE MODAL ──────────────────────────────────────────────────────────
 
 function openModal() {
   q('#modal').className = 'modal-overlay open';
@@ -358,7 +358,7 @@ function saveProfileFromModal() {
   saveProfile(); closeModal(); renderAll();
 }
 
-// ���� FEEDBACK ������������������������������������������������������������������������������������������������������������������������������
+// ── FEEDBACK ───────────────────────────────────────────────────────────────
 
 async function sendFeedback() {
   const text = q('#feedback-text').value.trim();
@@ -408,7 +408,7 @@ Response language: ${state.lang === 'ko' ? 'Korean' : state.lang === 'ja' ? 'Jap
 
   const sys = `You are an expert photography assistant. The user shot a photo using the settings above and gives feedback.
 Suggest specific corrected settings. Respect the gear limitations (max aperture, max ISO, owned filters).
-Reply concisely in plain text (no markdown). Format: cause (1-2 lines) �� corrected values (specific numbers) �� one tip.`;
+Reply concisely in plain text (no markdown). Format: cause (1-2 lines) → corrected values (specific numbers) → one tip.`;
 
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -434,7 +434,7 @@ Reply concisely in plain text (no markdown). Format: cause (1-2 lines) �� co
   btn.textContent = tx.feedback.send;
 }
 
-// ���� SLIDER EVENTS ��������������������������������������������������������������������������������������������������������������������
+// ── SLIDER EVENTS ──────────────────────────────────────────────────────────
 
 function bindSliders() {
   const bindings = [
@@ -457,7 +457,7 @@ function bindSliders() {
   });
 }
 
-// ���� RESET ������������������������������������������������������������������������������������������������������������������������������������
+// ── RESET ──────────────────────────────────────────────────────────────────
 
 function resetState() {
   if (!confirm(t().resetConfirm)) return;
@@ -466,7 +466,7 @@ function resetState() {
   renderAll();
 }
 
-// ���� PWA INSTALL ������������������������������������������������������������������������������������������������������������������������
+// ── PWA INSTALL ────────────────────────────────────────────────────────────
 
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', e => {
@@ -477,7 +477,7 @@ window.addEventListener('beforeinstallprompt', e => {
   }
 });
 
-// ���� INIT ��������������������������������������������������������������������������������������������������������������������������������������
+// ── INIT ───────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
   load();
