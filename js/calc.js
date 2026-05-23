@@ -245,8 +245,8 @@ window.calculate = function({
   const iso = snapISO(isoRaw, isoMin, isoMax);
 
   // 5. 범위 초과 경고
-  const isoOverMax = isoRaw > (isoMax || 6400);
-  const isoUnderMin = isoRaw < (isoMin || 50);
+  const isoOverMax  = isoRaw > (isoMax || 6400) * 1.1;
+  const isoUnderMin = isoRaw < (isoMin || 50) * 0.9;
   const shutterOutOfRange = shutterWithFilter < (shutterMin || 1/8000)
                          || shutterWithFilter > (shutterMax || 30);
 
