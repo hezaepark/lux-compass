@@ -1,4 +1,4 @@
-const CACHE = 'lux-compass-v1';
+const CACHE = 'lux-compass-v2';
 const ASSETS = [
   '/',
   '/index.html',
