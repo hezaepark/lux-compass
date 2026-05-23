@@ -361,11 +361,9 @@ function renderModal() {
 
   // ISO 레인지
   renderRangePills('iso-min-pills', ISO_STEPS, profile.isoMin,
-    v => { profile.isoMin = v; renderRangePills('iso-min-pills', ISO_STEPS, v,
-      vv => { profile.isoMin = vv; }); renderResults(); });
+    v => { profile.isoMin = v; renderResults(); });
   renderRangePills('iso-max-pills', ISO_STEPS, profile.isoMax,
-    v => { profile.isoMax = v; renderRangePills('iso-max-pills', ISO_STEPS, v,
-      vv => { profile.isoMax = vv; }); renderResults(); });
+    v => { profile.isoMax = v; renderResults(); });
 
   // 셔터 레인지
   renderRangePillsShutter('shutter-min-pills', profile.shutterMin,
