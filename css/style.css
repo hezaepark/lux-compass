@@ -431,3 +431,45 @@ input[type=range]::-webkit-slider-thumb {
 /* ── SCROLLBAR ───────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ── RANGE PILLS ─────────────────────────────────────────────────────────── */
+.range-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.range-side-label {
+  font-size: 9px;
+  color: var(--text4);
+  letter-spacing: 0.1em;
+  padding-top: 7px;
+  flex-shrink: 0;
+  width: 24px;
+}
+.range-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.range-pill {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.range-pill.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold4);
+}
+.range-pill:hover {
+  border-color: var(--border2);
+  color: var(--text2);
+}
