@@ -205,7 +205,10 @@ window.calculate = function({ subjectId, speedKmh, goalId, focalLength,
   const shutter           = snapShutter(shutterWithFilter);
 
   // Solve ISO from EV
-  const isoRaw = 100 * Math.pow(2, ev - Math.log2(shutter / (aperture * aperture)));
+  // EV = log2(N²/t) + log2(ISO/100)
+  // ISO = 100 × 2^(EV - log2(N²/t))
+  // 조리개 열릴수록(N 작아짐) N² 작아져서 ISO 낮아짐 ✓
+  const isoRaw = 100 * Math.pow(2, ev - Math.log2((aperture * aperture) / shutter));
   const iso    = snapISO(isoRaw, maxISO);
 
   const warnHigh = iso >= (maxISO || 12800) * 0.8 && isoRaw > 800;
