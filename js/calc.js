@@ -205,7 +205,7 @@ window.calculate = function({ subjectId, speedKmh, goalId, focalLength,
   const shutter           = snapShutter(shutterWithFilter);
 
   // Solve ISO from EV
-  const isoRaw = 100 * Math.pow(2, ev - Math.log2((aperture * aperture) / shutter));
+  const isoRaw = 100 * Math.pow(2, ev - Math.log2(shutter / (aperture * aperture)));
   const iso    = snapISO(isoRaw, maxISO);
 
   const warnHigh = iso >= (maxISO || 12800) * 0.8 && isoRaw > 800;
