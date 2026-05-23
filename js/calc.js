@@ -1,6 +1,6 @@
-// ���� LUX COMPASS 쨌 calc.js ��������������������������������������������������������������������������������������������������
+// ── LUX COMPASS · calc.js ─────────────────────────────────────────────────
 
-// ���� LEICA PRESETS ��������������������������������������������������������������������������������������������������������������������
+// ── LEICA PRESETS ──────────────────────────────────────────────────────────
 
 window.LEICA_PRESETS = [
   {
@@ -11,7 +11,7 @@ window.LEICA_PRESETS = [
     maxAperture: 'f/1.7',
     focalMin: 28, focalMax: 28,
     maxISO: 50000,
-    note: '28mm 怨좎젙 �뚯쫰 / �щ∼ �� 35쨌47mm �곷떦',
+    note: '28mm 고정 렌즈 / 크롭 시 35·47mm 상당',
   },
   {
     id: 'q3_43',
@@ -21,17 +21,17 @@ window.LEICA_PRESETS = [
     maxAperture: 'f/2.0',
     focalMin: 43, focalMax: 43,
     maxISO: 50000,
-    note: '43mm 怨좎젙 �뚯쫰',
+    note: '43mm 고정 렌즈',
   },
   {
     id: 'sl3_2490',
     name: 'SL3 + 24-90mm',
     body: 'Leica SL3',
     lenses: 'Vario-Elmarit-SL 24-90mm f/2.8-4',
-    maxAperture: 'f/2.8 (愿묎컖) / f/4 (留앹썝)',
+    maxAperture: 'f/2.8 (광각) / f/4 (망원)',
     focalMin: 24, focalMax: 90,
     maxISO: 100000,
-    note: '踰붿슜 以�. 24mm f/2.8 ~ 90mm f/4',
+    note: '범용 줌. 24mm f/2.8 ~ 90mm f/4',
   },
   {
     id: 'sl3_90240',
@@ -41,7 +41,7 @@ window.LEICA_PRESETS = [
     maxAperture: 'f/2.8 (90mm) / f/4 (240mm)',
     focalMin: 90, focalMax: 240,
     maxISO: 100000,
-    note: '留앹썝 以�. �ㅽ룷痢졖룹빞�앸룞臾셋룹썝嫄곕━ �몃Ъ',
+    note: '망원 줌. 스포츠·야생동물·원거리 인물',
   },
   {
     id: 'sl3_21',
@@ -51,7 +51,7 @@ window.LEICA_PRESETS = [
     maxAperture: 'f/3.4',
     focalMin: 21, focalMax: 21,
     maxISO: 100000,
-    note: '�명듃�� 愿묎컖. �띻꼍쨌嫄댁텞쨌�ㅻ궡',
+    note: '울트라 광각. 풍경·건축·실내',
   },
   {
     id: 'sl3_50',
@@ -61,7 +61,7 @@ window.LEICA_PRESETS = [
     maxAperture: 'f/2.0',
     focalMin: 50, focalMax: 50,
     maxISO: 100000,
-    note: '�쒖� �⑤젋利�. �몃Ъ쨌�ㅽ듃由ы듃쨌�쇱긽',
+    note: '표준 단렌즈. 인물·스트리트·일상',
   },
   {
     id: 'sl3_35',
@@ -71,7 +71,7 @@ window.LEICA_PRESETS = [
     maxAperture: 'f/2.0',
     focalMin: 35, focalMax: 35,
     maxISO: 100000,
-    note: '愿묎컖 �⑤젋利�. �ㅽ듃由ы듃쨌�섍꼍�몃Ъ',
+    note: '광각 단렌즈. 스트리트·환경인물',
   },
   {
     id: 'sl3_75',
@@ -81,11 +81,11 @@ window.LEICA_PRESETS = [
     maxAperture: 'f/2.0',
     focalMin: 75, focalMax: 75,
     maxISO: 100000,
-    note: '�몃Ъ�� �⑤젋利�. �뺤텞媛먃룸낫耳�',
+    note: '인물용 단렌즈. 압축감·보케',
   },
   {
     id: 'custom',
-    name: '吏곸젒 �낅젰 / Custom',
+    name: '직접 입력 / Custom',
     body: '',
     lenses: '',
     maxAperture: '',
@@ -95,33 +95,33 @@ window.LEICA_PRESETS = [
   },
 ];
 
-// ���� SCENES ����������������������������������������������������������������������������������������������������������������������������������
+// ── SCENES ─────────────────────────────────────────────────────────────────
 
 window.SCENES = [
-  { id: 'beach',        icon: '��截�',  ev: 15 },
-  { id: 'sunny_shade',  icon: '�뙟截�',  ev: 13 },
-  { id: 'cloudy',       icon: '��',  ev: 11 },
-  { id: 'indoor_bright',icon: '�룧',  ev: 9  },
-  { id: 'indoor_dim',   icon: '�빉截�',  ev: 7  },
-  { id: 'golden',       icon: '�똿',  ev: 8  },
-  { id: 'dusk',         icon: '�뙀',  ev: 6  },
-  { id: 'night',        icon: '�똽',  ev: 4  },
-  { id: 'darknight',    icon: '�뙔',  ev: 2  },
-  { id: 'custom',       icon: '�륅툘',  ev: null },
+  { id: 'beach',        icon: '☀️',  ev: 15 },
+  { id: 'sunny_shade',  icon: '🌤️',  ev: 13 },
+  { id: 'cloudy',       icon: '⛅',  ev: 11 },
+  { id: 'indoor_bright',icon: '🏠',  ev: 9  },
+  { id: 'indoor_dim',   icon: '🕯️',  ev: 7  },
+  { id: 'golden',       icon: '🌅',  ev: 8  },
+  { id: 'dusk',         icon: '🌆',  ev: 6  },
+  { id: 'night',        icon: '🌃',  ev: 4  },
+  { id: 'darknight',    icon: '🌙',  ev: 2  },
+  { id: 'custom',       icon: '✏️',  ev: null },
 ];
 
-// ���� SUBJECTS ������������������������������������������������������������������������������������������������������������������������������
+// ── SUBJECTS ───────────────────────────────────────────────────────────────
 
 window.SUBJECTS = [
-  { id: 'person_walk',  icon: '�슯', speed: 5   },
-  { id: 'person_run',   icon: '�룂', speed: 15  },
-  { id: 'bicycle',      icon: '�슩', speed: 25  },
-  { id: 'car_city',     icon: '�슅', speed: 50  },
-  { id: 'car_highway',  icon: '�썵截�', speed: 100 },
-  { id: 'static',       icon: '�룘截�', speed: 0   },
+  { id: 'person_walk',  icon: '🚶', speed: 5   },
+  { id: 'person_run',   icon: '🏃', speed: 15  },
+  { id: 'bicycle',      icon: '🚲', speed: 25  },
+  { id: 'car_city',     icon: '🚗', speed: 50  },
+  { id: 'car_highway',  icon: '🛣️', speed: 100 },
+  { id: 'static',       icon: '🏔️', speed: 0   },
 ];
 
-// ���� GOALS ������������������������������������������������������������������������������������������������������������������������������������
+// ── GOALS ──────────────────────────────────────────────────────────────────
 
 window.GOALS = [
   { id: 'freeze', blurPx: 1   },
@@ -130,10 +130,10 @@ window.GOALS = [
   { id: 'long',   blurPx: 120 },
 ];
 
-// ���� FILTERS ��������������������������������������������������������������������������������������������������������������������������������
+// ── FILTERS ────────────────────────────────────────────────────────────────
 
 window.ND_FILTERS = [
-  { label: '�놁쓬/None/�ゃ걮/Brak', stops: 0   },
+  { label: '없음/None/なし/Brak', stops: 0   },
   { label: 'ND2',    stops: 1   },
   { label: 'ND4',    stops: 2   },
   { label: 'ND8',    stops: 3   },
@@ -144,10 +144,10 @@ window.ND_FILTERS = [
   { label: 'ND1000', stops: 10  },
 ];
 
-window.ND_FILTER_LABELS = ['�놁쓬', 'ND2', 'ND4', 'ND8', 'ND16', 'ND64', 'ND100', 'ND400', 'ND1000'];
+window.ND_FILTER_LABELS = ['없음', 'ND2', 'ND4', 'ND8', 'ND16', 'ND64', 'ND100', 'ND400', 'ND1000'];
 window.OWNED_FILTER_OPTIONS = ['ND2','ND4','ND8','ND16','ND64','ND100','ND400','ND1000','CPL'];
 
-// ���� STANDARD VALUES ����������������������������������������������������������������������������������������������������������������
+// ── STANDARD VALUES ────────────────────────────────────────────────────────
 
 const SHUTTER_SPEEDS = [
   1/8000,1/6400,1/5000,1/4000,1/3200,1/2500,1/2000,1/1600,1/1250,
@@ -161,7 +161,7 @@ const ISO_VALUES = [
   1000,1250,1600,2000,3200,6400,12800,25600,51200,102400
 ];
 
-// ���� UTILS ������������������������������������������������������������������������������������������������������������������������������������
+// ── UTILS ──────────────────────────────────────────────────────────────────
 
 function snapShutter(t) {
   return SHUTTER_SPEEDS.reduce((a, b) => Math.abs(b - t) < Math.abs(a - t) ? b : a);
@@ -178,7 +178,7 @@ window.fmtShutter = function(s) {
   return `1/${Math.round(1/s)}s`;
 };
 
-// ���� CORE CALCULATION ��������������������������������������������������������������������������������������������������������������
+// ── CORE CALCULATION ───────────────────────────────────────────────────────
 
 window.calculate = function({ subjectId, speedKmh, goalId, focalLength,
                                distance, ev, ndStops, cpl, aperture, maxISO }) {
